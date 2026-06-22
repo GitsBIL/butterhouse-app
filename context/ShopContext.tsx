@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Alert } from "react-native";
+import { Alert } from "react-native"; // Tambahin import Platform
 
 export interface Product {
   id: number;
@@ -73,6 +73,7 @@ const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   
+  // Karena API udah online, biarin aja begini, nggak usah diganti ke IP Address
   const BASE_URL = "https://shop.tandurkarya.com";
   const PROJECT_ID = 15;
 
@@ -87,12 +88,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // FIX: Header disederhanakan agar tidak bentrok dengan sistem Native (Expo Go/APK)
   const getHeaders = () => ({
     "Content-Type": "application/json",
-    "Accept": "application/json, text/plain, */*", 
-    "Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-    "Connection": "keep-alive",
+    "Accept": "application/json", 
     "User-Agent": BROWSER_AGENT,
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   });
@@ -105,7 +104,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (savedToken) {
           setToken(savedToken);
           
-          // FIX 1: Paksa pakai savedToken langsung biar nggak nunggu state
           const profileRes = await fetch(`${BASE_URL}/auth/me`, {
             headers: {
               ...getHeaders(),
@@ -132,7 +130,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } catch (err) {
-        console.log("Gagal memuat token (Abaikan jika di Web)", err);
+        console.log("Gagal memuat token", err);
       } finally {
         setLoading(false);
       }
@@ -154,7 +152,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         data = JSON.parse(textRes);
       } catch (err) {
-        throw new Error("Server API bermasalah. Cek terminal VSCode untuk detail HTML-nya.");
+        throw new Error("Server API bermasalah atau diblokir WAF.");
       }
 
       if (!res.ok) throw new Error(data.message || "Registrasi Gagal");
@@ -190,7 +188,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(data.data.token);
       await AsyncStorage.setItem("userToken", data.data.token);
 
-      // FIX 2: Paksa pakai token yang baru didapet dari login
       const profileRes = await fetch(`${BASE_URL}/auth/me`, {
         headers: {
           ...getHeaders(),
