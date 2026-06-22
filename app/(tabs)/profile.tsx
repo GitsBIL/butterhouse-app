@@ -12,8 +12,9 @@ export default function ProfileScreen() {
     fetchPurchases();
   }, []);
 
-  const namaUser = user?.name || "Nabil Putra Alamsyah";
-  const emailUser = user?.email || "nabil.alamsyah@example.com";
+  // Kalau datanya belum selesai ke-load, kasih teks "Memuat..."
+  const namaUser = user?.name || "Memuat data...";
+  const emailUser = user?.email || "...";
   
   const orderCount = purchases.length;
   const totalSpent = purchases.reduce((sum, p) => sum + p.totalPrice, 0);
@@ -22,9 +23,7 @@ export default function ProfileScreen() {
     return s === "selesai" || s === "completed" || s === "success";
   }).length;
 
-  // --- FUNGSI BANTUAN (WHATSAPP REDIRECT) ---
   const handleBantuan = () => {
-    // Nomor WA dummy (bisa lu ganti nomor lu sendiri kalau mau ngetes)
     const phoneNumber = "6281234567890"; 
     const message = "Halo CS ButterHouse, saya butuh bantuan terkait pesanan saya.";
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -45,12 +44,14 @@ export default function ProfileScreen() {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         
         <View style={styles.header}>
-          <Text style={styles.greeting}>Hello, {namaUser.split(" ")[0]}</Text>
+          <Text style={styles.greeting}>Hello, {namaUser !== "Memuat data..." ? namaUser.split(" ")[0] : "Artisan"}</Text>
         </View>
 
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{namaUser.substring(0, 2).toUpperCase()}</Text>
+            <Text style={styles.avatarText}>
+              {namaUser !== "Memuat data..." ? namaUser.substring(0, 2).toUpperCase() : "..."}
+            </Text>
           </View>
           
           <Text style={styles.name}>{namaUser}</Text>
@@ -79,7 +80,6 @@ export default function ProfileScreen() {
           <Text style={styles.sectionTitle}>Akun Saya</Text>
           
           <View style={styles.menuContainer}>
-            {/* 1. Riwayat Pembelian (Sudah Jalan) */}
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/history")}>
               <View style={styles.menuIconBox}>
                 <MaterialIcons name="receipt-long" size={24} color="#735948" />
@@ -95,7 +95,6 @@ export default function ProfileScreen() {
 
             <View style={styles.menuDivider} />
 
-            {/* 2. Alamat Pengiriman (Akan Diarahkan ke halaman baru) */}
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/address")}>
               <View style={styles.menuIconBox}>
                 <MaterialIcons name="location-on" size={24} color="#735948" />
@@ -109,7 +108,6 @@ export default function ProfileScreen() {
 
             <View style={styles.menuDivider} />
 
-            {/* 3. Bantuan (Buka WhatsApp) */}
             <TouchableOpacity style={styles.menuItem} onPress={handleBantuan}>
               <View style={styles.menuIconBox}>
                 <MaterialIcons name="help-outline" size={24} color="#735948" />
@@ -124,12 +122,10 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          {/* 4. Edit Profile (Akan Diarahkan ke halaman baru) */}
           <TouchableOpacity style={styles.editBtn} onPress={() => router.push("/edit-profile")}>
             <Text style={styles.editBtnText}>Edit Profile</Text>
           </TouchableOpacity>
 
-          {/* 5. Sign Out (Sudah Jalan) */}
           <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
             <Text style={styles.logoutText}>Sign Out</Text>
           </TouchableOpacity>

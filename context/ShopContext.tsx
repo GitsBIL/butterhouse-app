@@ -2,9 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 
-// ========================================================
-// 1. DEFINISI TYPE / INTERFACE
-// ========================================================
 export interface Product {
   id: number;
   categoryId: number;
@@ -79,7 +76,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const BASE_URL = "https://shop.tandurkarya.com";
   const PROJECT_ID = 15;
 
-  // --- KUNCI UTAMA 1: PENYAMARAN JADI HP ANDROID ASLI ---
   const BROWSER_AGENT = "Mozilla/5.0 (Linux; Android 13; SM-S901B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36";
 
   const [token, setToken] = useState<string | null>(null);
@@ -91,7 +87,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // --- KUNCI UTAMA 2: HEADERS KOMPLIT ANTI CLOUDFLARE ---
   const getHeaders = () => ({
     "Content-Type": "application/json",
     "Accept": "application/json, text/plain, */*", 
@@ -102,9 +97,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   });
 
-  // ========================================================
-  // AUTO LOAD SESSION
-  // ========================================================
   useEffect(() => {
     const loadSession = async () => {
       try {
@@ -113,8 +105,12 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (savedToken) {
           setToken(savedToken);
           
+          // FIX 1: Paksa pakai savedToken langsung biar nggak nunggu state
           const profileRes = await fetch(`${BASE_URL}/auth/me`, {
-            headers: getHeaders(), // Pake getHeaders biar aman dari bot protection
+            headers: {
+              ...getHeaders(),
+              Authorization: `Bearer ${savedToken}`,
+            }, 
           });
 
           const textRes = await profileRes.text();
@@ -144,10 +140,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loadSession();
   }, []);
 
-  // ========================================================
-  // 2. FUNGSI AUTENTIKASI 
-  // ========================================================
-
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
       setLoading(true);
@@ -162,7 +154,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         data = JSON.parse(textRes);
       } catch (err) {
-        console.log("SERVER ERROR REGISTER:", textRes);
         throw new Error("Server API bermasalah. Cek terminal VSCode untuk detail HTML-nya.");
       }
 
@@ -191,7 +182,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         data = JSON.parse(textRes);
       } catch (err) {
-        console.log("SERVER ERROR LOGIN:", textRes);
         throw new Error("Server mengirim halaman HTML, bukan data login. Kemungkinan Endpoint salah atau diblokir WAF.");
       }
 
@@ -200,8 +190,12 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(data.data.token);
       await AsyncStorage.setItem("userToken", data.data.token);
 
+      // FIX 2: Paksa pakai token yang baru didapet dari login
       const profileRes = await fetch(`${BASE_URL}/auth/me`, {
-        headers: getHeaders(), // Pake getHeaders
+        headers: {
+          ...getHeaders(),
+          Authorization: `Bearer ${data.data.token}`
+        }, 
       });
       
       const profileText = await profileRes.text();
@@ -232,10 +226,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCart([]);
     setPurchases([]);
   };
-
-  // ========================================================
-  // 3. FUNGSI AMBIL DATA
-  // ========================================================
 
   const fetchCategories = async () => {
     try {
@@ -286,10 +276,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (err) { console.log("Error Purchases:", err); }
   };
-
-  // ========================================================
-  // 4. FUNGSI MODIFIKASI DATA
-  // ========================================================
 
   const addToCart = async (productId: number, quantity: number): Promise<boolean> => {
     try {

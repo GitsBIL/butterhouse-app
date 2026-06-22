@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-import OrderCard from "../../components/OrderCard";
-import { useShop } from "../../context/ShopContext";
-
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import OrderCard from "../../components/OrderCard";
+import { useShop } from "../../context/ShopContext";
 
 export default function HistoryScreen() {
   const { purchases, fetchPurchases } = useShop();
@@ -15,7 +13,6 @@ export default function HistoryScreen() {
     fetchPurchases();
   }, []);
 
-  // Olah Data buat Ringkasan di Header
   const totalOrders = purchases.length;
   const totalSpent = purchases.reduce((sum, p) => sum + p.totalPrice, 0);
   const completedCount = purchases.filter((p) => {
@@ -26,8 +23,6 @@ export default function HistoryScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      
-      {/* Header dengan Personality */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
           <MaterialIcons name="arrow-back" size={24} color="#594232" />
@@ -38,13 +33,11 @@ export default function HistoryScreen() {
           <Text style={styles.headerSubtitle}>Lihat pesanan dan pembelian sebelumnya.</Text>
         </View>
         
-        <View style={{ width: 40 }} /> {/* Penyeimbang biar tengah */}
+        <View style={{ width: 40 }} />
       </View>
 
       <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        
-        {/* Ringkasan Statistik Lebih Padat */}
-        {totalOrders > 0 && (
+        {totalOrders > 0 ? (
           <View style={styles.summaryContainer}>
             <Text style={styles.summaryMain}>
               {totalOrders} Pesanan • Rp {totalSpent.toLocaleString("id-ID")} Total
@@ -53,11 +46,10 @@ export default function HistoryScreen() {
               {completedCount} Completed • {pendingCount} Pending
             </Text>
           </View>
-        )}
+        ) : null}
 
         <View style={styles.divider} />
 
-        {/* Daftar Transaksi */}
         {purchases.length === 0 ? (
           <View style={styles.emptyCard}>
             <Text style={styles.emptyText}>Belum ada riwayat pembelian.</Text>
@@ -89,11 +81,10 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingBottom: 40 },
   
-  // Ringkasan Header Padat
   summaryContainer: {
     paddingHorizontal: 24,
     marginTop: 4,
-    marginBottom: 16, // Jarak dikurangi biar hemat ruang
+    marginBottom: 16,
   },
   summaryMain: { fontSize: 15, fontWeight: "bold", color: "#594232", marginBottom: 4 },
   summarySub: { fontSize: 13, color: "#A89F91", fontWeight: "500" },
