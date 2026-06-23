@@ -20,14 +20,14 @@ export default function ProductDetailScreen() {
   const { products, addToCart } = useShop();
 
   const [quantity, setQuantity] = useState(1);
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // State buat Pop-Up
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const product = products?.find((p) => p.id == (id as any));
 
   const safeName = product?.productName || "Heritage Sourdough";
   const safePrice = Number(product?.productPrice || 12000); 
   const safeImage = product?.productImage || "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=600";
-  const safeDesc = product?.productDescription || "Our signature loaf is crafted using a deeply nurtured natural starter, ancient grain organic flour, and a touch of artisanal sea salt.";
+  const safeDesc = product?.productDescription || "Nikmati kelezatan pastry premium yang dipanggang segar setiap hari dengan bahan-bahan pilihan terbaik.";
 
   if (!product) {
     return (
@@ -41,7 +41,6 @@ export default function ProductDetailScreen() {
     );
   }
 
-  // Panggil Pop-Up kustom, bukan alert bawaan browser
   const handleAddToCart = async () => {
     if (addToCart && product.id) {
       const success = await addToCart(product.id, quantity);
@@ -64,52 +63,45 @@ export default function ProductDetailScreen() {
               <TouchableOpacity style={styles.glassBtn} onPress={() => router.back()}>
                 <MaterialIcons name="arrow-back" size={20} color="#594232" />
               </TouchableOpacity>
-              <View style={styles.topNavRight}>
-                <TouchableOpacity style={styles.glassBtn}>
-                  <MaterialIcons name="favorite-border" size={20} color="#594232" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.glassBtn}>
-                  <MaterialIcons name="share" size={20} color="#594232" />
-                </TouchableOpacity>
-              </View>
+              {/* Ikon Hati dan Share sudah dihapus total dari sini */}
             </View>
             <View style={styles.chefBadge}>
-              <Text style={styles.chefBadgeText}>CHEF'S RECOMMENDATION</Text>
+              <Text style={styles.chefBadgeText}>REKOMENDASI CHEF</Text>
             </View>
           </View>
         </ImageBackground>
 
         <View style={styles.contentContainer}>
           <Text style={styles.titleText}>{safeName}</Text>
-          <Text style={styles.subtitleText}>A 48-hour fermented masterpiece with a complex, tangy crumb.</Text>
+          <Text style={styles.subtitleText}>Dipanggang segar dengan bahan premium pilihan.</Text>
 
           <View style={styles.priceRow}>
             <Text style={styles.priceText}>Rp {safePrice.toLocaleString("id-ID")}</Text>
             <View style={styles.freshBadge}>
-              <Text style={styles.freshBadgeText}>Fresh batch at 15:00</Text>
+              <Text style={styles.freshBadgeText}>Selesai dipanggang 15:00</Text>
             </View>
           </View>
 
           <Text style={styles.descriptionText}>{safeDesc}</Text>
 
-          <Text style={styles.sectionHeader}>Product Details</Text>
+          <Text style={styles.sectionHeader}>Detail Produk</Text>
           
           <View style={styles.detailsGrid}>
             <View style={styles.detailBox}>
               <MaterialIcons name="shopping-bag" size={18} color="#594232" style={styles.detailIcon} />
-              <Text style={styles.detailLabel}>WEIGHT</Text>
+              <Text style={styles.detailLabel}>BERAT</Text>
               <Text style={styles.detailValue}>850g</Text>
             </View>
             <View style={styles.detailBox}>
               <MaterialIcons name="thermostat" size={18} color="#594232" style={styles.detailIcon} />
-              <Text style={styles.detailLabel}>STORAGE</Text>
-              <Text style={styles.detailValue}>Room Temp</Text>
+              <Text style={styles.detailLabel}>PENYIMPANAN</Text>
+              <Text style={styles.detailValue}>Suhu Ruang</Text>
             </View>
           </View>
 
           <View style={styles.infoBoxFull}>
-            <Text style={styles.detailLabel}>INGREDIENTS</Text>
-            <Text style={styles.detailValueLine}>Organic Stoneground Wheat Flour, Filtered Water, Natural Starter, Celtic Sea Salt.</Text>
+            <Text style={styles.detailLabel}>KOMPOSISI</Text>
+            <Text style={styles.detailValueLine}>Tepung Gandum Organik, Air Mineral, Ragi Alami, Garam Laut Keltik.</Text>
           </View>
         </View>
       </ScrollView>
@@ -133,7 +125,7 @@ export default function ProductDetailScreen() {
         </View>
 
         <TouchableOpacity style={styles.addToCartBtn} onPress={handleAddToCart} activeOpacity={0.8}>
-          <Text style={styles.addToCartText}>Add to Cart • Rp {totalPrice.toLocaleString("id-ID")}</Text>
+          <Text style={styles.addToCartText}>Tambah ke Keranjang • Rp {totalPrice.toLocaleString("id-ID")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -185,7 +177,6 @@ const styles = StyleSheet.create({
   imageContainer: { width: "100%", height: 380 },
   imageOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.15)", justifyContent: "space-between", paddingTop: 50, paddingBottom: 40, paddingHorizontal: 20 },
   topNav: { flexDirection: "row", justifyContent: "space-between" },
-  topNavRight: { flexDirection: "row", gap: 12 },
   glassBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: "rgba(250, 247, 242, 0.9)", alignItems: "center", justifyContent: "center" },
   chefBadge: { backgroundColor: "#785317", alignSelf: "flex-start", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6 },
   chefBadgeText: { color: "#FFFFFF", fontSize: 10, fontWeight: "bold", letterSpacing: 1 },
@@ -212,8 +203,6 @@ const styles = StyleSheet.create({
   qtyText: { fontSize: 16, fontWeight: "bold", color: "#1C1C19", minWidth: 24, textAlign: "center" },
   addToCartBtn: { flex: 1, flexDirection: "row", backgroundColor: "#6F4315", paddingVertical: 14, borderRadius: 12, justifyContent: "center", alignItems: "center" },
   addToCartText: { color: "#FFFFFF", fontSize: 14, fontWeight: "bold" },
-  
-  // Custom Modal Styles
   modalBg: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center", padding: 24 },
   modalBox: { backgroundColor: "#FFFFFF", borderRadius: 20, padding: 24, alignItems: "center", width: "100%", maxWidth: 320, elevation: 5 },
   iconCircle: { width: 64, height: 64, borderRadius: 32, backgroundColor: "#ECFDF5", alignItems: "center", justifyContent: "center", marginBottom: 16 },

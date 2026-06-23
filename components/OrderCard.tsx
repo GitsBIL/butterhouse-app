@@ -8,7 +8,6 @@ interface OrderCardProps {
 }
 
 export default function OrderCard({ order }: OrderCardProps) {
-  // Kita panggil daftar produk (JSON) lu yang udah ketarik otomatis sama sistem
   const { products } = useShop(); 
   const [isDetailVisible, setDetailVisible] = useState(false);
 
@@ -23,10 +22,11 @@ export default function OrderCard({ order }: OrderCardProps) {
   let statusIcon = "check-circle";
 
   if (isPending) {
-    badgeBg = "#FFF4D6"; 
+    badgeBg = "#FEF3C7"; 
     statusColor = "#D97706"; 
-    statusText = "Menunggu Pembayaran";
-    statusIcon = "access-time";
+    // REVISI: Ganti teks dan ikon jadi Sedang Dikirim
+    statusText = "Sedang Dikirim";
+    statusIcon = "local-shipping"; 
   } else if (isCancelled) {
     badgeBg = "#F3F4F6"; 
     statusColor = "#6B7280"; 
@@ -47,13 +47,7 @@ export default function OrderCard({ order }: OrderCardProps) {
   // =====================================================================
   // LOGIKA DETEKTIF: NEBAK BARANG BERDASARKAN TOTAL HARGA
   // =====================================================================
-  // Kita cari apakah ada produk yang harganya SAMA PERSIS dengan total belanja
   const matchedProduct = products?.find(p => p.productPrice === order.totalPrice);
-
-  // Kalau ketemu persis 1 barang, tampilin gambar & namanya. Kalau nggak, jadiin Paket Pesanan.
-  const displayImage = matchedProduct 
-    ? matchedProduct.productImage 
-    : "https://images.unsplash.com/photo-1590841366162-d2780e5572b8?w=300&q=80"; // Gambar tas pesanan
     
   const displayName = matchedProduct 
     ? matchedProduct.productName 
@@ -62,6 +56,8 @@ export default function OrderCard({ order }: OrderCardProps) {
   const displaySubtitle = matchedProduct 
     ? "1 barang" 
     : invoiceNumber;
+
+  const displayPrice = `Rp ${order.totalPrice.toLocaleString("id-ID")}`;
 
   return (
     <>
@@ -79,7 +75,14 @@ export default function OrderCard({ order }: OrderCardProps) {
         <View style={styles.divider} />
 
         <View style={styles.cardBody}>
-          <Image source={{ uri: displayImage }} style={styles.productImage} resizeMode="cover" />
+          {/* REVISI: Kalau bukan single product, pakai Ikon Boks biar gambar gak ilang/blank */}
+          {matchedProduct && matchedProduct.productImage ? (
+            <Image source={{ uri: matchedProduct.productImage }} style={styles.productImage} resizeMode="cover" />
+          ) : (
+            <View style={styles.genericImagePlaceholder}>
+              <MaterialIcons name="inventory-2" size={28} color="#D97706" />
+            </View>
+          )}
           
           <View style={styles.productInfo}>
             <Text style={styles.productName} numberOfLines={1}>{displayName}</Text>
@@ -90,14 +93,16 @@ export default function OrderCard({ order }: OrderCardProps) {
         <View style={styles.cardFooter}>
           <View>
             <Text style={styles.totalLabel}>Total Belanja</Text>
-            <Text style={styles.totalPrice}>Rp {order.totalPrice.toLocaleString("id-ID")}</Text>
+            <Text style={styles.totalPrice}>{displayPrice}</Text>
           </View>
+          
           <TouchableOpacity style={styles.detailBtn} onPress={() => setDetailVisible(true)} activeOpacity={0.8}>
             <Text style={styles.detailBtnText}>Lihat Detail</Text>
           </TouchableOpacity>
         </View>
       </View>
 
+      {/* MODAL DETAIL PESANAN */}
       <Modal visible={isDetailVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -137,14 +142,13 @@ export default function OrderCard({ order }: OrderCardProps) {
 
               <View style={styles.modalSection}>
                 <Text style={styles.sectionTitle}>Rincian Pesanan</Text>
-                
                 <View style={styles.itemRow}>
                   <View style={styles.itemLeft}>
                     <Text style={styles.itemName}>{displayName}</Text>
                     <Text style={styles.itemQty}>{matchedProduct ? "1" : "Multi"} Item • Detail dikelola sistem</Text>
                   </View>
                   <Text style={styles.itemTotalPrice}>
-                    Rp {order.totalPrice.toLocaleString("id-ID")}
+                    {displayPrice}
                   </Text>
                 </View>
               </View>
@@ -158,14 +162,12 @@ export default function OrderCard({ order }: OrderCardProps) {
                 </View>
                 <View style={styles.detailRow}>
                   <Text style={styles.detailLabelFlex}>Total Harga</Text>
-                  <Text style={styles.detailValueFlex}>Rp {order.totalPrice.toLocaleString("id-ID")}</Text>
+                  <Text style={styles.detailValueFlex}>{displayPrice}</Text>
                 </View>
-                
                 <View style={styles.dashedDivider} />
-                
                 <View style={styles.detailRow}>
                   <Text style={styles.totalTextBig}>Total Belanja</Text>
-                  <Text style={styles.totalPriceBig}>Rp {order.totalPrice.toLocaleString("id-ID")}</Text>
+                  <Text style={styles.totalPriceBig}>{displayPrice}</Text>
                 </View>
               </View>
 
@@ -187,6 +189,7 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: "#F0ECE6", marginHorizontal: 16 },
   cardBody: { flexDirection: "row", padding: 16, alignItems: "center" },
   productImage: { width: 56, height: 56, borderRadius: 10, backgroundColor: "#F4F0EB", marginRight: 16 },
+  genericImagePlaceholder: { width: 56, height: 56, borderRadius: 10, backgroundColor: "#FFFBEB", alignItems: "center", justifyContent: "center", marginRight: 16 },
   productInfo: { flex: 1 },
   productName: { fontSize: 15, fontWeight: "bold", color: "#1C1C19", marginBottom: 4 },
   productMeta: { fontSize: 12, color: "#D97706", fontWeight: "500" },

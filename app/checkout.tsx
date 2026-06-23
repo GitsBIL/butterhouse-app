@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import {
   FlatList, Image,
   Modal, Platform,
-  SafeAreaView, ScrollView, StatusBar, StyleSheet, Text,
+  SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput,
   TouchableOpacity, View
 } from "react-native";
 import { PaymentMethod, useShop } from "../context/ShopContext";
@@ -18,15 +18,13 @@ export default function CheckoutScreen() {
   const [contactPhone, setContactPhone] = useState("+62 812-3456-7890");
   const [deliveryAddress, setDeliveryAddress] = useState("Kawasan Cikarang Festival (Cifest)\nCikarang Selatan\nKabupaten Bekasi\nJawa Barat 17530");
   
-  const [schedule, setSchedule] = useState("08:00 - 11:00 (Pagi)");
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
-  const [isGift, setIsGift] = useState(false);
 
   const [isPaymentModalVisible, setPaymentModalVisible] = useState(false);
   const [isContactModalVisible, setContactModalVisible] = useState(false);
   const [isAddressModalVisible, setAddressModalVisible] = useState(false);
   
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // Modal Checkout
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     fetchPaymentMethods();
@@ -45,13 +43,13 @@ export default function CheckoutScreen() {
   const finalTotal = subtotal + tax;
 
   const handleProcessCheckout = async () => {
-    if (!selectedMethod) return; // Tambahin validasi di sini kalau mau
+    if (!selectedMethod) return; 
     
     const addressString = deliveryAddress.replace(/\n/g, ", ");
     const success = await checkout(addressString, selectedMethod.id);
     
     if (success) {
-      setShowSuccessModal(true); // Panggil Modal Custom
+      setShowSuccessModal(true);
     }
   };
 
@@ -73,6 +71,7 @@ export default function CheckoutScreen() {
       <View style={styles.headerDivider} />
 
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        {/* --- KONTAK PENERIMA --- */}
         <View style={styles.card}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionTitle}>Kontak Penerima</Text>
@@ -83,6 +82,7 @@ export default function CheckoutScreen() {
           <Text style={styles.secondaryText}>{contactPhone}</Text>
         </View>
 
+        {/* --- ALAMAT PENGIRIMAN --- */}
         <View style={styles.card}>
           <View style={styles.sectionHeaderRow}>
             <View style={styles.titleWithIcon}>
@@ -94,6 +94,7 @@ export default function CheckoutScreen() {
           <Text style={styles.addressLine}>{deliveryAddress}</Text>
         </View>
 
+        {/* --- METODE PEMBAYARAN --- */}
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Metode Pembayaran</Text>
           <TouchableOpacity 
@@ -119,6 +120,7 @@ export default function CheckoutScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* --- RINGKASAN PESANAN --- */}
         <View style={styles.card}>
           <View style={styles.summaryHeader}>
             <Text style={styles.sectionTitle}>Ringkasan Pesanan</Text>
@@ -164,30 +166,65 @@ export default function CheckoutScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* --- MODAL CUSTOM CHECKOUT BERHASIL --- */}
-      <Modal visible={showSuccessModal} transparent animationType="fade">
-        <View style={styles.modalBgSuccess}>
-          <View style={styles.modalBoxSuccess}>
-            <View style={styles.iconCircleSuccess}>
-              <MaterialIcons name="local-shipping" size={32} color="#D97706" />
+      {/* --- MODAL UBAH KONTAK --- */}
+      <Modal visible={isContactModalVisible} animationType="fade" transparent={true}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Ubah Kontak Penerima</Text>
+              <TouchableOpacity onPress={() => setContactModalVisible(false)} style={styles.closeBtn}>
+                <MaterialIcons name="close" size={24} color="#1C1C19" />
+              </TouchableOpacity>
             </View>
-            <Text style={styles.modalTitleSuccess}>Pesanan Berhasil!</Text>
-            <Text style={styles.modalDescSuccess}>Roti Anda segera diproses oleh Artisan kami dan akan segera dikirim ke alamat Anda.</Text>
-            
-            <TouchableOpacity 
-              style={styles.btnSolidSuccess} 
-              onPress={() => {
-                setShowSuccessModal(false);
-                router.replace("/(tabs)/history"); // Auto ke history
-              }}
-            >
-              <Text style={styles.btnSolidTextSuccess}>Cek Status Pesanan</Text>
+            <Text style={styles.inputLabel}>Nama Lengkap</Text>
+            <TextInput 
+              style={styles.inputField} 
+              value={contactName} 
+              onChangeText={setContactName} 
+              placeholder="Masukkan nama penerima"
+            />
+            <Text style={styles.inputLabel}>Nomor Telepon</Text>
+            <TextInput 
+              style={styles.inputField} 
+              value={contactPhone} 
+              onChangeText={setContactPhone} 
+              keyboardType="phone-pad"
+              placeholder="Contoh: +62 812..."
+            />
+            <TouchableOpacity style={styles.modalSaveBtn} onPress={() => setContactModalVisible(false)}>
+              <Text style={styles.modalSaveBtnText}>Simpan Kontak</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-      {/* SISA MODAL BAWAAN LU TETAP DI BAWAH SINI (Payment, Contact, Address) */}
+      {/* --- MODAL UBAH ALAMAT --- */}
+      <Modal visible={isAddressModalVisible} animationType="fade" transparent={true}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Ubah Alamat Pengiriman</Text>
+              <TouchableOpacity onPress={() => setAddressModalVisible(false)} style={styles.closeBtn}>
+                <MaterialIcons name="close" size={24} color="#1C1C19" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.inputLabel}>Alamat Lengkap</Text>
+            <TextInput 
+              style={[styles.inputField, { height: 120, textAlignVertical: 'top' }]} 
+              value={deliveryAddress} 
+              onChangeText={setDeliveryAddress} 
+              multiline={true}
+              numberOfLines={4}
+              placeholder="Masukkan alamat lengkap, patokan, dll."
+            />
+            <TouchableOpacity style={styles.modalSaveBtn} onPress={() => setAddressModalVisible(false)}>
+              <Text style={styles.modalSaveBtnText}>Simpan Alamat</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* --- MODAL METODE PEMBAYARAN --- */}
       <Modal visible={isPaymentModalVisible} animationType="fade" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -226,6 +263,29 @@ export default function CheckoutScreen() {
                 </TouchableOpacity>
               )}
             />
+          </View>
+        </View>
+      </Modal>
+
+      {/* --- MODAL CUSTOM CHECKOUT BERHASIL --- */}
+      <Modal visible={showSuccessModal} transparent animationType="fade">
+        <View style={styles.modalBgSuccess}>
+          <View style={styles.modalBoxSuccess}>
+            <View style={styles.iconCircleSuccess}>
+              <MaterialIcons name="local-shipping" size={32} color="#D97706" />
+            </View>
+            <Text style={styles.modalTitleSuccess}>Pesanan Berhasil!</Text>
+            <Text style={styles.modalDescSuccess}>Roti Anda segera diproses oleh Artisan kami dan akan segera dikirim ke alamat Anda.</Text>
+            
+            <TouchableOpacity 
+              style={styles.btnSolidSuccess} 
+              onPress={() => {
+                setShowSuccessModal(false);
+                router.replace("/(tabs)/history"); // Auto ke history
+              }}
+            >
+              <Text style={styles.btnSolidTextSuccess}>Cek Status Pesanan</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -279,14 +339,15 @@ const styles = StyleSheet.create({
   payBtn: { backgroundColor: "#6F4315", paddingHorizontal: 24, justifyContent: "center", borderRadius: 10, height: 52 },
   payBtnText: { color: "#FFFFFF", fontSize: 14, fontWeight: "bold", textAlign: "center" },
   
-  modalOverlay: { flex: 1, backgroundColor: "rgba(0, 0, 0, 0.4)", justifyContent: "flex-end" },
-  modalContent: { backgroundColor: "#FFFFFF", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 24, maxHeight: "80%" },
+  modalOverlay: { flex: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", justifyContent: "center", padding: 20 },
+  modalContent: { backgroundColor: "#FFFFFF", borderRadius: 20, padding: 24, maxHeight: "80%" },
   modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
   modalTitle: { fontSize: 16, fontWeight: "bold", color: "#1C1C19" },
   closeBtn: { padding: 4 },
   inputLabel: { fontSize: 12, fontWeight: "bold", color: "#594232", marginBottom: 8 },
   inputField: { backgroundColor: "#FAF7F2", borderWidth: 1, borderColor: "#EAE5DD", borderRadius: 10, paddingHorizontal: 16, paddingVertical: 12, fontSize: 14, color: "#1C1C19", marginBottom: 16 },
   modalSaveBtn: { backgroundColor: "#D97706", paddingVertical: 14, borderRadius: 10, marginTop: 8 },
+  modalSaveBtnText: { color: "#FFFFFF", fontSize: 14, fontWeight: "bold", textAlign: "center" },
   paymentModalItem: { flexDirection: "row", alignItems: "center", paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: "#F4F0EB" },
   paymentLogoList: { width: 40, height: 40 },
   paymentModalTextBox: { flex: 1, marginLeft: 16 },
