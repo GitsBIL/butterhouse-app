@@ -5,7 +5,7 @@ ButterHouse adalah aplikasi *e-commerce mobile* berkonsep *bakery/pastry* premiu
 
 ---
 
-## 👥 Kelompok 5 - Teknik Informatika (Universitas Pelita Bangsa)
+## 👥 Kelompok 6 - Teknik Informatika (Universitas Pelita Bangsa)
 Aplikasi ini dikembangkan dan dievaluasi oleh:
 1. ADAM YUDA PRATAMA
 2. BAGAS GIRI NUGRAHA
@@ -68,12 +68,15 @@ Jika Anda ingin menjalankan *source code* ini di mesin lokal, ikuti langkah beri
 2. Clone repositori ini:
 ```bash
    git clone <https://github.com/GitsBIL/butterhouse-app.git>
-3. Masuk ke direktori proyek:
-```bash
-   cd butterhouse-app
-4. Instal dependensi:
-```bash
-   npm install
-5. Jalankan server lokal Expo:
-```bash
-   npx expo start
+Masuk ke direktori proyek:
+
+Bash
+cd butterhouse-app
+Instal dependensi:
+
+Bash
+npm install
+Jalankan server lokal Expo:
+
+Bash
+npx expo start
