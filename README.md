@@ -67,16 +67,16 @@ Jika Anda ingin menjalankan *source code* ini di mesin lokal, ikuti langkah beri
 1. Pastikan Anda telah menginstal Node.js dan Git.
 2. Clone repositori ini:
 ```bash
-   git clone <https://github.com/GitsBIL/butterhouse-app.git>
-Masuk ke direktori proyek:
+git clone <https://github.com/GitsBIL/butterhouse-app.git>
 
+Masuk ke direktori proyek:
 Bash
 cd butterhouse-app
-Instal dependensi:
 
+Instal dependensi:
 Bash
 npm install
-Jalankan server lokal Expo:
 
+Jalankan server lokal Expo:
 Bash
 npx expo start
