@@ -1,50 +1,79 @@
-# Welcome to your Expo app 👋
+# 🥐 ButterHouse - Premium Bakery E-Commerce Mobile App
+**Final Project Pemrograman Mobile & Interaksi Manusia Komputer (IMK)**
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+ButterHouse adalah aplikasi *e-commerce mobile* berkonsep *bakery/pastry* premium yang memungkinkan pengguna untuk menjelajahi katalog roti segar, menambahkan pesanan ke keranjang, mengelola alamat pengiriman, dan melakukan proses *checkout* dengan antarmuka yang elegan dan *user-friendly*.
 
-## Get started
+---
 
-1. Install dependencies
+## 👥 Kelompok 5 - Teknik Informatika (Universitas Pelita Bangsa)
+Aplikasi ini dikembangkan dan dievaluasi oleh:
+1. ADAM YUDA PRATAMA
+2. BAGAS GIRI NUGRAHA
+3. DAFA MAULANA MAKMUDIN
+4. HAIDAR YUDHA PERDANA
+5. NABIL PUTRA ALAMSYAH
+6. RANGGA ARFIANSYAH AGESTI
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## ✨ Fitur Utama
+* **Autentikasi Aman:** Login dan Registrasi akun pengguna dengan validasi keamanan dan pop-up interaktif.
+* **Katalog Produk:** Menampilkan daftar *pastry* premium dengan detail harga, deskripsi, dan komposisi yang informatif.
+* **Manajemen Keranjang (Cart):** Pengguna dapat mengatur jumlah pesanan secara dinamis.
+* **Proses Checkout Terpadu:** Pengguna dapat mengubah alamat, mengelola kontak penerima, dan memilih metode pembayaran langsung di dalam satu halaman *checkout* tanpa harus berpindah halaman.
+* **Riwayat Pesanan:** Melacak pesanan aktif (Sedang Dikirim) dan riwayat belanja yang telah selesai lengkap dengan nomor *invoice*.
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🎨 Implementasi Evaluasi UI/UX (Tugas IMK)
+Berdasarkan hasil analisis dan evaluasi heuristik, kami telah menerapkan berbagai perbaikan antarmuka untuk meningkatkan kenyamanan pengguna:
+1. **Perbaikan Copywriting:** Mengubah istilah teknis (seperti "Sign In Kelompok") menjadi bahasa yang lebih ramah pengguna ("Masuk ke ButterHouse").
+2. **Konsistensi Visual:** Menyelaraskan palet warna (*earth tone/bakery*) pada seluruh tombol dan teks aplikasi.
+3. **Peningkatan Form & Keamanan:** Menambahkan fitur *Show/Hide Password* dan input Konfirmasi Kata Sandi pada form registrasi.
+4. **Optimalisasi Alur Checkout:** Mengubah fungsi tombol "Ubah" pada halaman *checkout* agar memunculkan *Modal/Pop-up* alih-alih melempar pengguna ke luar halaman, sehingga alur transaksi tidak terputus.
+5. **Konsistensi Data:** Memastikan sinkronisasi nominal total belanja yang akurat antara daftar riwayat dan detail pesanan.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📸 Dokumentasi Layar (Screenshots)
 
-## Get a fresh project
+<p align="center">
+  <img src="./screenshots/login.png" width="200" />
+  <img src="./screenshots/register.png" width="200" />
+  <img src="./screenshots/home.png" width="200" />
+  <img src="./screenshots/detail_produk.png" width="200" />
+</p>
+<p align="center">
+  <img src="./screenshots/keranjang.png" width="200" />
+  <img src="./screenshots/checkout.png" width="200" />
+  <img src="./screenshots/riwayat_pembelian.png" width="200" />
+  <img src="./screenshots/halaman_profil.png" width="200" />
+</p>
 
-When you're ready, run:
+---
 
+## 🎥 Video Demo Aplikasi
+Berikut adalah video demonstrasi alur penggunaan aplikasi ButterHouse dari awal hingga akhir:
+
+👉 **[Tonton Video Demo di Sini](tempat link gdrive)**
+
+*(Catatan: Harap pastikan menggunakan koneksi internet yang stabil untuk memutar video melalui Google Drive).*
+
+---
+
+## 🚀 Cara Menjalankan Project secara Lokal
+Jika Anda ingin menjalankan *source code* ini di mesin lokal, ikuti langkah berikut:
+
+1. Pastikan Anda telah menginstal Node.js dan Git.
+2. Clone repositori ini:
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+   git clone <https://github.com/GitsBIL/butterhouse-app.git>
+3. Masuk ke direktori proyek:
+```bash
+   cd butterhouse-app
+4. Instal dependensi:
+```bash
+   npm install
+5. Jalankan server lokal Expo:
+```bash
+   npx expo start
