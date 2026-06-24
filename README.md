@@ -55,7 +55,7 @@ Berdasarkan hasil analisis dan evaluasi heuristik, kami telah menerapkan berbaga
 ## 🎥 Video Demo Aplikasi
 Berikut adalah video demonstrasi alur penggunaan aplikasi ButterHouse dari awal hingga akhir:
 
-👉 **[Tonton Video Demo di Sini](tempat link gdrive)**
+👉 **[Tonton Video Demo di Sini](https://drive.google.com/file/d/1XdapqlSk2gyBi6xzYP6qFWOIUNPfCOnz/view?usp=drive_link)**
 
 *(Catatan: Harap pastikan menggunakan koneksi internet yang stabil untuk memutar video melalui Google Drive).*
 
